@@ -1,0 +1,39 @@
+spring:
+  application:
+     name: web-service
+  main:
+    allow-bean-definition-overriding: true
+  profiles:
+    active: local
+  config:
+    import: 'optional:configserver:'
+  cloud:
+    discovery:
+      enabled: false
+tetrate:
+  accountsService:
+    name: account-service
+  portfolioService:
+    name: portfolio-service
+  quoteServiceUrl: 'http://localhost:8081'
+  userService:
+    name: user-service
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+      show-components: always
+info:
+  build:
+    group: ${group}
+    name: ${name}
+    description: ${description}
+    version: ${version}
+logging:
+  level:
+    io:
+      tetrate: DEBUG

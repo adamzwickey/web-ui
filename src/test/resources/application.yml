@@ -1,4 +1,4 @@
-pivotal:
+tetrate:
   accountsService:
     name: account-service
   portfolioService:
