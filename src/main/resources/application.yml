@@ -17,8 +17,10 @@ spring:
           keycloak: 
             client-id: tetrate-trader
             client-secret: tetrate-trader
+            scope: openid
         provider:
           keycloak:
+            user-name-attribute: preferred_username
             issuer-uri: https://keycloak.cloud.zwickey.net/auth/realms/tetrate
 tetrate:
   accountsService:
@@ -45,6 +47,5 @@ info:
     version: ${version}
 logging:
   level:
-    io:
-      tetrate: DEBUG
+    io.tetrate: DEBUG
     org.springframework.security: DEBUG

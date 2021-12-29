@@ -19,11 +19,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
+        http.csrf().disable()
+        .authorizeRequests()
         .mvcMatchers(HttpMethod.GET, "/").permitAll() // GET requests to home don't need auth
-        .anyRequest()
-        .authenticated()
+        .mvcMatchers(HttpMethod.GET, "/actuator/health").permitAll()
+        .anyRequest().fullyAuthenticated()
         //.and().oauth2ResourceServer().jwt()
+        .and().logout().logoutUrl("/logout").logoutSuccessUrl("/").invalidateHttpSession(true)
         .and().oauth2Login();
     }
 
