@@ -3,7 +3,6 @@ package io.tetrate.web.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -14,7 +13,6 @@ import io.tetrate.web.domain.Quote;
 import java.util.*;
 
 @Service
-@RefreshScope
 public class QuoteService {
 	private static final Logger LOG = LoggerFactory.getLogger(QuoteService.class);
 
@@ -31,10 +29,10 @@ public class QuoteService {
 		LOG.debug("Fetching quote: {}", symbol);
 		List<Quote> quotes = getMultipleQuotes(symbol);
 		if (quotes.size() == 1 ) {
-			LOG.debug("Fetched quote: " + quotes.get(0));
+			LOG.debug("Fetched quote: {}", quotes.get(0));
 			return quotes.get(0);
 		}
-		LOG.debug("exception: should only be 1 quote and got multiple or zero: " + quotes.size());
+		LOG.debug("exception: should only be 1 quote and got multiple or zero: {}", quotes.size());
 		return new Quote();
 	}
 	
@@ -50,8 +48,7 @@ public class QuoteService {
 	public List<CompanyInfo> getCompanies(String name) {
 		LOG.info("Fetching companies with name or symbol matching: {}", name);
 		CompanyInfo[] infos = restTemplate().getForObject(quotesServiceUrl + "/v1/company/{name}", CompanyInfo[].class, name);
-        List<CompanyInfo> companyInfoList = Arrays.asList(infos);
-		return companyInfoList;
+		return Arrays.asList(infos);
 	}
 	private List<CompanyInfo> getCompaniesFallback(String name) {
 		List<CompanyInfo> infos = new ArrayList<>();

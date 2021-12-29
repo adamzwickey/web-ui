@@ -10,6 +10,16 @@ spring:
   cloud:
     discovery:
       enabled: false
+  security:
+    oauth2:
+      client:
+        registration: 
+          keycloak: 
+            client-id: tetrate-trader
+            client-secret: tetrate-trader
+        provider:
+          keycloak:
+            issuer-uri: https://keycloak.cloud.zwickey.net/auth/realms/tetrate
 tetrate:
   accountsService:
     name: account-service
@@ -37,3 +47,4 @@ logging:
   level:
     io:
       tetrate: DEBUG
+    org.springframework.security: DEBUG

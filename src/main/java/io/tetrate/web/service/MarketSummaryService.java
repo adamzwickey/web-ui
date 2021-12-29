@@ -3,24 +3,19 @@ package io.tetrate.web.service;
 import io.tetrate.web.domain.MarketSummary;
 import io.tetrate.web.domain.Quote;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cloud.context.config.annotation.RefreshScope;
-import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 @Service
-@RefreshScope
 public class MarketSummaryService {
 	private static final Logger logger = LoggerFactory.getLogger(MarketSummaryService.class);
 	@Value("${pivotal.summary.quotes:3}")
@@ -28,10 +23,8 @@ public class MarketSummaryService {
 	
 	//10 minutes in milliseconds
 	@Value("${tetrate.summary.refresh:600000}")
-	private final static String refresh_period = "600000";
+	private final static String refreshPeriod = "600000";
 	
-	//private static List<String> symbolsIT = Arrays.asList("EMC", "ORCL", "IBM", "INTC", "AMD", "HPQ", "CSCO", "AAPL");
-	//private static List<String> symbolsFS = Arrays.asList("JPM", "C", "MS", "BAC", "GS", "WFC","BK");
 	@Value("${tetrate.summary.symbols.it:EMC,IBM,VMW}")
 	private String symbolsIT;
     @Value("${tetrate.summary.symbols.fs:JPM,C,MS}")
@@ -43,26 +36,23 @@ public class MarketSummaryService {
 	private QuoteService marketService;
 	
 	public MarketSummary getMarketSummary() {
-		logger.debug("Retrieving Market Summary: " + summary);
+		logger.debug("Retrieving Market Summary: {}", summary);
 		if (!summary.isInitialised()) {
 			retrieveMarketSummary();
 		}
 		return summary;
 	}
 	
-	@Scheduled(fixedRateString = refresh_period)
+	@Scheduled(fixedRateString = refreshPeriod, initialDelay = 5000)
 	protected void retrieveMarketSummary() {
 		logger.debug("Scheduled retrieval of Market Summary");
-		/*
-		 * Sleuth currently doesn't work with parallelStream.
-		 * TODO: re-implement parallel calls.
-		 */
-		//List<Quote> quotesIT = pickRandomThree(Arrays.asList(symbolsIT.split(","))).parallelStream().map(symbol -> getQuote(symbol)).collect(Collectors.toList());
-		//List<Quote> quotesFS = pickRandomThree(Arrays.asList(symbolsFS.split(","))).parallelStream().map(symbol -> getQuote(symbol)).collect(Collectors.toList());
-		
-		//List<Quote> quotesFS = pickRandomThree(Arrays.asList(symbolsFS.split(","))).stream().map(symbol -> marketService.getQuote(symbol)).collect(Collectors.toList());
 		summary.setTopGainers(getTopThree(symbolsIT));
 		summary.setTopLosers(getTopThree(symbolsFS));
+
+		//Testing...
+		summary.getTopGainers();
+		summary.getTopLosers();
+
 	}
 
 	/**
@@ -81,9 +71,7 @@ public class MarketSummaryService {
 	}
 	
 	private List<String> pickRandomThree(List<String> symbols) {
-		List<String> list = new ArrayList<>();
 		Collections.shuffle(symbols);
-	    list = symbols.subList(0, numberOfQuotes);
-	    return list;
+	    return symbols.subList(0, numberOfQuotes);
 	}
 }
