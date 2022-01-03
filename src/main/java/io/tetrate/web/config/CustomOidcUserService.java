@@ -44,6 +44,9 @@ public class CustomOidcUserService extends OidcUserService {
         if (CollectionUtils.isEmpty(authorities)) {
             authorities = new HashSet<>();
             authorities.add(new SimpleGrantedAuthority("ROLE_TETRATE_TRADER"));
+            authorities.add(new SimpleGrantedAuthority("ROLE_ACCOUNT"));
+            authorities.add(new SimpleGrantedAuthority("ROLE_TRADE"));
+            authorities.add(new SimpleGrantedAuthority("ROLE_PORTFOLIO"));
         }
         String userNameAttributeName = userRequest.getClientRegistration()
                 .getProviderDetails().getUserInfoEndpoint().getUserNameAttributeName();
@@ -59,9 +62,11 @@ public class CustomOidcUserService extends OidcUserService {
 
     private Set<GrantedAuthority> mapAuthorities(Map<?,?> roles) {
         LOG.debug("Roles: {}", roles);
-        Assert.notNull(roles, "Client Role Mapping not configured properly");
-        return ((List<String>)((Map)roles.get(_clientId)).get("roles")).stream().filter(scope -> !scope.equals("openid"))
-                .map(scope -> new SimpleGrantedAuthority("ROLE_" + scope.toUpperCase().replaceAll("\\.", "_")))
-                .collect(Collectors.toSet());
+        // Assert.notNull(roles, "Client Role Mapping not configured properly");
+        // return ((List<String>)((Map)roles.get(_clientId)).get("roles")).stream().filter(scope -> !scope.equals("openid"))
+        //         .map(scope -> new SimpleGrantedAuthority("ROLE_" + scope.toUpperCase().replaceAll("\\.", "_")))
+        //         .collect(Collectors.toSet());
+        //temp hack for self-registration
+        return null;
     }
 }

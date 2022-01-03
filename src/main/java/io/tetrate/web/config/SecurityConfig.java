@@ -23,6 +23,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .authorizeRequests()
         .mvcMatchers(HttpMethod.GET, "/").permitAll() // GET requests to home don't need auth
         .mvcMatchers(HttpMethod.GET, "/actuator/health").permitAll()
+        .mvcMatchers("/registration").permitAll()
         .anyRequest().fullyAuthenticated()
         //.and().oauth2ResourceServer().jwt()
         .and().logout().logoutUrl("/logout").logoutSuccessUrl("/").invalidateHttpSession(true)

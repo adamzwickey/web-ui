@@ -1,12 +1,8 @@
 tetrate:
   clientId: tetrate-trader
-  accountsService:
-    name: account-service
-  portfolioService:
-    name: portfolio-service
+  accountServiceUrl: 'http://localhost:8082'
+  portfolioServiceUrl: 'http://localhost:8083'
   quoteServiceUrl: 'http://localhost:8081'
-  userService:
-    name: user-service
 spring:
   application:
      name: web-service
@@ -31,6 +27,7 @@ spring:
           keycloak:
             user-name-attribute: preferred_username
             issuer-uri: https://keycloak.cloud.zwickey.net/auth/realms/tetrate
+            
 management:
   endpoints:
     web:
