@@ -4,6 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.parameters.P;
+import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -52,6 +54,7 @@ public class UserController {
 		u.setEmail(principal.getAttribute("email"));
 		u.setId(principal.getName());
 		u.setSurname(principal.getAttribute("family_name"));
+		u.setJwt(principal.getAttribute("accessToken"));
 		model.addAttribute("user", u);
 		return "index";
 	}

@@ -17,10 +17,6 @@
                     <td style="width: 50%;" th:text=" ${user.email}">user</td>
                 </tr>
                 <tr>
-                    <td style="width: 50%;">Creation Date</td>
-                    <td style="width: 50%;" th:text="${user.createdDate}">today</td>
-                </tr>
-                <tr>
                     <td style="width: 50%;">Roles</td>
                     <td style="width: 50%;" sec:authentication="principal.authorities"></td>
                 </tr>
