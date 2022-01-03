@@ -27,7 +27,7 @@ metadata:
   name: web
   namespace: web
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: web
@@ -54,6 +54,10 @@ spec:
           env:
           - name: TETRATE_QUOTESERVICEURL
             value: http://quotes-service.quotes:8080
+          - name: TETRATE_ACCOUNTSERVICEURL
+            value: http://accounts-service.accounts:8080
+          - name: TETRATE_PORTFOLIOSERVICEURL
+            value: http://portfolio-service.portfolio:8080
 ---
 apiVersion: cert-manager.io/v1
 kind: Certificate

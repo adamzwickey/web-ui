@@ -46,4 +46,4 @@ info:
 logging:
   level:
     io.tetrate: DEBUG
-    org.springframework.security: DEBUG
+    org.springframework.security: WARN
