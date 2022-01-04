@@ -57,7 +57,7 @@ public class UserController {
         LOG.info("Retrieving authorized home page");
 		model.addAttribute("marketSummary", summaryService.getMarketSummary());
 		LOG.debug("User logged in: {}", principal);
-		model.addAttribute("accounts",accountService.getAccounts(principal));
+		model.addAttribute("accounts",accountService.getAccounts(principal.getName(), principal.getAttribute("accessToken")));
 		model.addAttribute("portfolio",portfolioService.getPortfolio(principal));
 		User u = new User();
 		u.setGivenNames(principal.getAttribute("given_name"));

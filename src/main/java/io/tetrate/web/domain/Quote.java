@@ -14,6 +14,21 @@ public class Quote {
 	private Double change;
 	private Double low;
 	private Double high;
+	private String status;
+	private String currency;
+
+	public String getCurrency() {
+		return currency;
+	}
+	public void setCurrency(String currency) {
+		this.currency = currency;
+	}
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
+	}
 
 	public String getName() {
 		return name;

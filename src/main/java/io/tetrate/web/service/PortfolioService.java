@@ -5,6 +5,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -31,10 +34,18 @@ public class PortfolioService {
       return new RestTemplate();
     }
 
-	public Order sendOrder(Order order, OAuth2AuthorizedClient oAuth2AuthorizedClient ) {
+	public Order sendOrder(Order order, OAuth2User principal ) {
 		LOG.debug("send order: {}", order);
 
-		ResponseEntity<Order>  result = restTemplate().postForEntity(_url + "/portfolio", order, Order.class);
+		HttpHeaders headers = new HttpHeaders();
+        HttpEntity<Order> entity = new HttpEntity(order, headers);
+        headers.add("Authorization", "Bearer " + principal.getAttribute("accessToken"));
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        ResponseEntity<Order> result = restTemplate().exchange(_url + "/portfolio", 
+                            HttpMethod.POST, 
+                            entity, 
+                            Order.class);
+		// ResponseEntity<Order>  result = restTemplate().postForEntity(_url + "/portfolio", order, Order.class);
 		if (result.getStatusCode() == HttpStatus.INTERNAL_SERVER_ERROR) {
 			throw new OrderNotSavedException("Could not save the order");
 		}
@@ -44,8 +55,18 @@ public class PortfolioService {
 
 	public Portfolio getPortfolio(OAuth2User user ) {
         LOG.debug("Retreiving Portfolio for user {}", user);
+
+		HttpHeaders headers = new HttpHeaders();
+        HttpEntity<String> entity = new HttpEntity("", headers);
+        headers.add("Authorization", "Bearer " + user.getAttribute("accessToken"));
+        //headers.setContentType(MediaType.APPLICATION_JSON);
+        ResponseEntity<Portfolio> folio = restTemplate().exchange(_url + "/portfolio", 
+                            HttpMethod.GET, 
+                            entity, 
+                            Portfolio.class);
+
 		//Portfolio folio = restTemplate().getForObject(_url + "/portfolio", Portfolio.class);
-		//LOG.debug("Portfolio received: {}" + folio);
-		return new Portfolio();
+		LOG.debug("Portfolio received: {}", folio);
+		return folio.getBody();
 	}
 }

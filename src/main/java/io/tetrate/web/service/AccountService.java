@@ -10,7 +10,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -40,12 +42,27 @@ public class AccountService {
         LOG.info("Status from registering account for {}" + registrationRequest.getEmail() + " is " + user.getId());
     }
 
-    public List<Account> getAccounts(OAuth2User user) {
+    public void createAccount(Account account, String token) {
+        LOG.debug("Creating account {}", account);
+        LOG.debug("\t with Token {}", token);
+
+        HttpHeaders headers = new HttpHeaders();
+        HttpEntity<Account> entity = new HttpEntity<>(account, headers);
+        headers.add("Authorization", "Bearer " + token);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        ResponseEntity<String> accounts = restTemplate().exchange(accountServiceUrl + "/accounts", 
+                            HttpMethod.POST, 
+                            entity, 
+                            String.class);
+        LOG.info("Status from registering account is {}", accounts);
+    }
+
+    public List<Account> getAccounts(String user, String userToken) {
       LOG.debug("Getting Accounts for userId: {}", user);
 
       HttpHeaders headers = new HttpHeaders();
       HttpEntity<String> entity = new HttpEntity<>("", headers);
-      headers.add("Authorization", "Bearer " + user.getAttribute("accessToken"));
+      headers.add("Authorization", "Bearer " + userToken);
       ResponseEntity<Account[]> accounts = restTemplate().exchange(accountServiceUrl + "/accounts", 
                             HttpMethod.GET, 
                             entity, 

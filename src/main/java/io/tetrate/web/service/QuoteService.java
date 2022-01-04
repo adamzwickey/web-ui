@@ -47,8 +47,14 @@ public class QuoteService {
 	//@HystrixCommand(fallbackMethod = "getCompaniesFallback")
 	public List<CompanyInfo> getCompanies(String name) {
 		LOG.info("Fetching companies with name or symbol matching: {}", name);
-		CompanyInfo[] infos = restTemplate().getForObject(quotesServiceUrl + "/v1/company/{name}", CompanyInfo[].class, name);
-		return Arrays.asList(infos);
+
+		List<CompanyInfo> companyInfos = new ArrayList<CompanyInfo>();
+		for (String i : name.split(",")) {
+			CompanyInfo info = restTemplate().getForObject(quotesServiceUrl + "/v1/company/{name}", CompanyInfo.class, i);	
+			LOG.debug("Company Info: {}", info);
+			companyInfos.add(info);
+		}
+		return companyInfos;
 	}
 	private List<CompanyInfo> getCompaniesFallback(String name) {
 		List<CompanyInfo> infos = new ArrayList<>();
@@ -66,7 +72,6 @@ public class QuoteService {
 		List<Quote> quotes = Arrays.asList(quotesArr);
 		LOG.info("Received quotes: {}",quotes);
 		return quotes;
-		
 	}
 	/**
 	 * Retrieve multiple quotes.
